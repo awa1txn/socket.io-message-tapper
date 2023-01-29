@@ -1,6 +1,6 @@
-# chat-example
+# socket.io-message-tapper
 
-This is the source code for a very simple chat example used for
+This is the source code for a socket.io-message-tapper used for
 the [Getting Started](http://socket.io/get-started/chat/) guide
 of the Socket.IO website.
 
