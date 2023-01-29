@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Socket.IO chat</title>
+    <style>
+      body { margin: 0;height: 100%; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+@-webkit-keyframes fadein {
+    0% { opacity: 0;  }
+    100% { opacity: 1; margin-top:20px}
+}
+
+@-moz-keyframes fadein {
+    0% { opacity: 0; }
+    100% { opacity: 1; margin-top:20px}
+}
+
+@keyframes fadein {
+    0% { opacity: 0; }
+    100% { opacity: 1; margin-top:20px}
+}
+@-webkit-keyframes fadeout {
+    0% { opacity: 0;  }
+    100% { opacity: 1;}
+}
+
+@-moz-keyframes fadeout {
+    0% { opacity: 0; }
+    100% { opacity: 1;}
+}
+
+@keyframes fadeout {
+    0% { opacity: 0; }
+    100% { opacity: 1;}
+}
+.who{
+  animation: fadein .5s infinite ease reverse;
+}
+.whi{
+  animation: fadeout .5s infinite ease;
+}
+.lol{
+  display: none;
+}
+input{
+  width:200px;
+  height:20px;
+}
+    </style>
+  </head>
+  <body>
+    <input type="text" id="a">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var emojiInput = document.querySelector('#a');
+      var bodyY = document.querySelector('html');
+
+      class Coords {
+        constructor(emoji,x,y,size){
+          this.emoji = emoji;
+          this.x = x;
+          this.y = y;
+          this.size = size;
+        }
+      }
+      bodyY.addEventListener('click', function(e){
+        e.preventDefault();
+        let u = new Coords(emojiInput.value ,window.event.clientX, window.event.clientY, Math.floor(Math.random() * 30 + 20))
+        socket.emit('spawn block', u);
+      })
+      socket.on('spawn block', function(cords){
+        var item = document.createElement('div');
+        item.innerHTML = `${cords.emoji}`;
+        item.style = `position:absolute; user-select: none;font-size:${cords.size}px`;
+        item.style.left += `${cords.x - (cords.size/1.95)}px`;
+        item.style.top += `${cords.y - (cords.size/1.95)}px`;
+        item.className = 'whi'
+        bodyY.appendChild(item)
+        setTimeout(()=>{
+          item.className = 'who'
+        },400)
+        setTimeout(()=>{
+          item.className += ' lol'
+          item.remove()
+        },800)
+      })
+    </script>
+  </body>
+</html>
